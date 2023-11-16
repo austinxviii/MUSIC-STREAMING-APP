@@ -1,0 +1,77 @@
+{% extends "user/layout.html" %}
+
+{% block rightpane %}
+<div class="my-3 mx-4">
+    <h4>All Albums</h4>
+</div>
+<div class="my-3 mx-3">
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Sr.No</th>
+                    <th>Album Name</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for album in albums %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ album.title }}</td>
+                        <td>
+                            <button class="btn btn-primary btn-sm" onclick="toggleSongs('{{ album.id }}')">Expand</button>
+                            <button class="btn btn-success btn-sm" onclick="window.location.href = '/user/uploadSongs';">Add Songs</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteAlbum('{{ album.id }}')">Delete Album</button>
+                        </td>
+                    </tr>
+                    <tr class="song-table" id="songs_{{ album.id }}" style="display: none;">
+                        <td colspan="3">
+                            <!-- Add a nested table for songs -->
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Sr.No</th>
+                                        <th>Song Name</th>
+                                        <th>Genre</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for song in album.songs %}
+                                        <tr>
+                                            <td>{{ loop.index }}</td>
+                                            <td>{{ song.title }}</td>
+                                            <td>{{ song.genre }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    function toggleSongs(albumId) {
+        var songs = document.getElementById('songs_' + albumId);
+        var button = document.querySelector('button[data-album="' + albumId + '"]');
+
+        if (songs.style.display === 'none') {
+            songs.style.display = 'table-row';
+            button.innerText = 'Shrink';
+        } else {
+            songs.style.display = 'none';
+            button.innerText = 'Expand';
+        }
+    }
+
+    function deleteAlbum(albumId) {
+        if (confirm('Are you sure you want to delete this album? All songs in the album will be deleted aswell !')) {
+            window.location.href = `/user/deleteAlbum/${albumId}`;
+        }
+    }
+</script>
+{% endblock rightpane %}

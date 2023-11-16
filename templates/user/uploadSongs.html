@@ -1,0 +1,55 @@
+{% extends "user/layout.html" %}
+
+{% block rightpane %}
+<div>
+    <br>
+    <h2 style="margin-left: 50px;">Upload a Song!</h2>
+    <br>
+</div>
+<form action="" method="POST" enctype="multipart/form-data">
+    <div class="upload">
+        <label>Enter song title &nbsp;</label>
+        <input type="text" name="title" id="title"/>
+    </div>
+
+    <br>
+
+    <div class="upload">
+        <label>Enter song genre &nbsp;</label>
+        <input type="text" name="genre" id="genre"/>
+    </div>
+
+    <br>
+
+    <div class="upload">
+        <label>Select Album &nbsp;</label>
+        <select name="album" style="background-color: gray;">
+            {% for album in albums %}
+                <option value="{{ album.id }}">{{ album.title }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <br>
+
+    <div class="upload">
+        <label>Upload Lyrics (in .txt file) &nbsp;</label>
+        <input type="file" name="lyrics" id="lyrics"/>
+    </div>
+
+    <br>
+
+    <div class="upload">
+        <label>Upload Song (in .MP3 file) &nbsp;</label>
+        <input type="file" name="songfile" id="songfile"/>
+    </div>
+    
+    <br>
+
+    <a href="/user/creatorDashboard">Upload Complete? Go back</a>
+
+    <br>
+    
+    <button class="upload">Submit</button>
+</form>
+{% endblock rightpane %}
