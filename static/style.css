@@ -32,7 +32,7 @@ header{
 
 header .left_pane, .right_pane{
     width: 25%;
-    height: 90%;
+    height: 88%;
 }
 
 
@@ -47,7 +47,7 @@ header .left_pane{
 
 header .music_play{
     width: 100%;
-    height: 10%;
+    height: 12%;
     background: #F6F1EE;
 }
 
@@ -121,7 +121,7 @@ header .right_pane .song_carousels::-webkit-scrollbar-track{
 header .right_pane .song_carousels::-webkit-scrollbar-thumb{
     background-color: var(--surface-2);
     border-radius: 20px;
-    border: 3px solid #DADDB1;
+    border: 2px solid #DADDB1;
 }
 
 
@@ -135,13 +135,15 @@ header .right_pane .song_carousels .recommended{
 
 header .right_pane .song_carousels .recommended .media_scroller{
     width: 100%;
-    height: 230px;
+    height: 270px;
     margin-top: 15px;
     display: grid;
     grid-auto-flow: column;
     grid-auto-columns: 21%;
     gap: var(--size-3);
     overflow-x: auto;
+    background: #DADD99;
+    padding: 10px 10px 10px 10px;
 }
 
 header .right_pane .song_carousels .recommended .media_scroller::-webkit-scrollbar{
@@ -155,7 +157,7 @@ header .right_pane .song_carousels .recommended .media_scroller::-webkit-scrollb
 header .right_pane .song_carousels .recommended .media_scroller::-webkit-scrollbar-thumb{
     background-color: var(--surface-2);
     border-radius: 20px;
-    border: 3px solid #DADDB1;
+    border: 2px solid #DADDB1;
 }
 
 header .right_pane .song_carousels .recommended .media_scroller .media-element{
@@ -183,8 +185,9 @@ header .music_play{
 }
 
 header .music_play .song_image{
-    height: 50px;
-    width: 50px;
+    height: 70px;
+    width: 70px;
+    margin-left: 15px;
     border: 1px solid black;
     overflow: hidden;
 }
@@ -205,4 +208,63 @@ header .music_play .disp .top{
 
 header .music_play .disp .bottom{
     margin-top: 10px;    
+}
+
+
+header .left_pane .playlists{
+    width:auto;
+    margin: 0px 30px 25px 30px;
+    overflow-y:auto; 
+    position:relative;
+    height: 270px;
+    background: #b3a485;
+    /* border: 1px solid black; */
+}
+
+header .left_pane .playlists .playlistItem{
+    margin-left: 10px;
+    font-size: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+header .left_pane .playlists li {
+    list-style: none;
+    padding: 0;
+    list-style-image: url("/static/assets/music-note-list.svg");
+    margin: 10px;
+  }
+
+  header .left_pane .playlists li a{
+    text-decoration: none;
+    color: #121213;
+  }
+
+
+
+header .left_pane .playlists::-webkit-scrollbar{
+    height: 14px;
+}
+
+header .left_pane .playlists::-webkit-scrollbar-track{
+    background: #B3A492;
+    ;
+}
+
+header .left_pane .playlists::-webkit-scrollbar-thumb{
+    background-color: var(--surface-2);
+    border-radius: 20px;
+    border: 5px solid #B3A492;
+}
+
+header .left_pane .add{
+    padding-top: 87px;
+    padding-left: 60px;
+    /* border: 1px solid black; */
+}
+
+header .left_pane .icol{
+    color: #121213;
 }

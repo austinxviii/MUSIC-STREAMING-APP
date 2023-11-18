@@ -44,6 +44,11 @@ function playSong(songId) {
             const songNameDisplay = document.getElementById('songNameDisplay');
             songNameDisplay.textContent = songName;
 
+            // Fetch and update song creator
+            const creatorName = document.querySelector(`[data-song-id="${songId}"]`).getAttribute('data-song-creator');
+            const creatorNameDisplay = document.getElementById('creatorNameDisplay');
+            creatorNameDisplay.textContent = creatorName;
+
             fetch(`/album_cover/${songId}`)
                 .then(response => response.blob())
                 .then(coverBlob => {

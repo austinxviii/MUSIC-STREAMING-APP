@@ -24,6 +24,7 @@ class User(db.Model):
     email = db.Column(db.String(255), nullable = False)
     is_creator = db.Column(db.Boolean, default=False)
     albums = db.relationship('Album', backref='user')
+    playlists = db.relationship('Playlist', backref='user')
     username = db.Column(db.String(255), nullable = False)
     password = db.Column(db.String(255), nullable = False)
 
@@ -52,14 +53,32 @@ class Album(db.Model):
     def __repr__(self):
         return f'Album("{self.id}", "{self.title}", "{self.songs}", "{self.cover}")'
 
+
+# ASSICIATION TABLE BETWEEN PLAYLIST AND SONG(MANY-TO-MANY)
+song_playlist_association = db.Table('song_playlist_association',
+    db.Column('song_id', db.Integer, db.ForeignKey('song.id')),
+    db.Column('playlist_id', db.Integer, db.ForeignKey('playlist.id'))
+)
+
+
+# PLAYLIST CLASS
+class Playlist(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(255), nullable=False)
+    songs = db.relationship('Song', secondary=song_playlist_association, backref='playlists')
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    def __repr__(self):
+        return f'Playlist("{self.id}", "{self.title}", "{self.user_id}")'
+
     
 
-#SONG CLASS
+# SONG CLASS
 class Song(db.Model):
-    id = db.Column(db.Integer, primary_key = True)
-    title = db.Column(db.String(255), nullable = False) 
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(255), nullable=False)
     album_id = db.Column(db.Integer, db.ForeignKey('album.id'))
-    genre = db.Column(db.String(255), nullable = False)
+    genre = db.Column(db.String(255), nullable=False)
     lyrics = db.Column(db.LargeBinary)
     file_data = db.Column(db.LargeBinary)
 
@@ -302,7 +321,7 @@ def creator():
 def newCreator():
     return render_template('user/newCreator.html', csspage='/static/existcreat.css')
 
-
+# CREATOR - REGISTER
 @app.route('/user/registerAsCreator')
 def register_as_creator():
     # Assuming you have a way to identify the current user (replace get_current_user with your logic)
@@ -358,7 +377,8 @@ def creatorDashboard():
     if current_user and current_user.is_creator:
         # Query albums associated with the current user
         albums = Album.query.filter_by(user_id=current_user.id).all()
-        return render_template('/user/creatorDashboard.html', csspage='/static/uploadSongs.css', albums=albums)
+        playlists = Playlist.query.filter_by(user_id=current_user.id).all()
+        return render_template('/user/creatorDashboard.html', csspage='/static/uploadSongs.css', albums=albums, playlists=playlists)
     else:
         # Redirect to login or handle the case where the user is not a creator
         return redirect('/user/')  # Redirect to the login page or handle accordingly
@@ -383,6 +403,35 @@ def delete_album(album_id):
             db.session.commit()
 
     return redirect(url_for('creatorDashboard'))
+
+
+# DELETE SONG
+@app.route('/user/deleteSong/<int:song_id>')
+def delete_song(song_id):
+    current_user = get_current_user()
+    
+    if current_user and current_user.is_creator:
+        song = Song.query.get(song_id)
+        
+        if song and song.album.user == current_user:
+            db.session.delete(song)
+            db.session.commit()
+
+    return redirect(url_for('creatorDashboard'))
+
+
+@app.route('/user/newPlaylist', methods=['POST', 'GET'])
+def newPlaylist():
+    if request.method == 'POST':
+        current_user = get_current_user()
+        title = request.form.get('title')
+
+        playlist = Playlist(title=title, user_id=current_user.id)
+        db.session.add(playlist)
+        db.session.commit()
+
+        return redirect('/user/newPlaylist')
+    return render_template('/user/newPlaylist.html', csspage='/static/uploadSongs.css')
 
 
 if __name__ == "__main__":
