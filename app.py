@@ -281,9 +281,11 @@ def userChangePassword():
 # USER DASHBOARD
 @app.route('/user/userDashboard')
 def userDashboard():
+    current_user = get_current_user()
     songs = Song.query.all()
     albums = Album.query.all()
-    return render_template('/user/userDashboard.html', songs=songs, albums=albums, include_musicplayer=True)
+    playlists = Playlist.query.filter_by(user_id=current_user.id).all()
+    return render_template('/user/userDashboard.html', songs=songs, albums=albums, playlists=playlists, include_musicplayer=True)
 
 # GET COVER
 @app.route('/album_cover/<int:album_id>')
@@ -377,8 +379,7 @@ def creatorDashboard():
     if current_user and current_user.is_creator:
         # Query albums associated with the current user
         albums = Album.query.filter_by(user_id=current_user.id).all()
-        playlists = Playlist.query.filter_by(user_id=current_user.id).all()
-        return render_template('/user/creatorDashboard.html', csspage='/static/uploadSongs.css', albums=albums, playlists=playlists)
+        return render_template('/user/creatorDashboard.html', csspage='/static/uploadSongs.css', albums=albums)
     else:
         # Redirect to login or handle the case where the user is not a creator
         return redirect('/user/')  # Redirect to the login page or handle accordingly
@@ -419,7 +420,7 @@ def delete_song(song_id):
 
     return redirect(url_for('creatorDashboard'))
 
-
+# USER - NEW PLAYLIST
 @app.route('/user/newPlaylist', methods=['POST', 'GET'])
 def newPlaylist():
     if request.method == 'POST':
@@ -432,6 +433,39 @@ def newPlaylist():
 
         return redirect('/user/newPlaylist')
     return render_template('/user/newPlaylist.html', csspage='/static/uploadSongs.css')
+
+
+# USER - ALBUM DISPLAY
+@app.route('/user/album')
+def album():
+    current_user = get_current_user()
+    albums = Album.query.all()
+    album_name = request.args.get('album_name', '')
+    album = Album.query.filter_by(title=album_name).first()
+    songs = Song.query.filter_by(album_id=album.id).all()
+    playlists = Playlist.query.filter_by(user_id=current_user.id).all()
+    return render_template('/user/album.html', songs=songs, albums=albums, playlists=playlists, album_name=album.title, include_musicplayer=True)
+
+
+# USER - PLAYLIST DISPLAY
+@app.route('/user/playlist')
+def playlist():
+    current_user = get_current_user()
+    albums = Album.query.all()
+    playlist_name = request.args.get('playlist_name', '')
+    
+    # Fetch the selected playlist
+    playlist = Playlist.query.filter_by(title=playlist_name, user_id=current_user.id).first()
+
+    if playlist:
+        # Fetch songs from the selected playlist
+        songs = playlist.songs
+    else:
+        songs = []
+
+    playlists = Playlist.query.filter_by(user_id=current_user.id).all()
+    return render_template('/user/playlist.html', songs=songs, albums=albums, playlists=playlists, playlist_name=playlist_name, include_musicplayer=True)
+
 
 
 if __name__ == "__main__":

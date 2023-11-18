@@ -12,14 +12,31 @@
                     {% endif %}
                     <p class="title" style="margin-bottom: 0px;">{{ song.title }}</p>
                     <p style="font-size: 15px;">{{ song.album.user.name }}</p>
-                    <a href="#" class="play-song" data-song-id="{{ song.id }}" data-song-name="{{ song.title }}" data-song-creator="{{ song.album.user.name }}">
+
+                    <a href="#" class="play-song" data-song-id="{{ song.id }}" data-song-name="{{ song.title }}" data-song-creator="{{ song.album.user.name }}" data-toggle="tooltip" title="Play Song">
                         <span class="fa-stack fa-sm">
                             <i class="fa fa-circle fa-stack-2x icol"></i>
                             <i class="fa fa-play fa-stack-1x" style="color: #fff;"></i>
                         </span>
                     </a>
 
-                    <div class="dropdown" style="display: inline-block; margin-left: 90px;">
+                    <div class="dropdown" style="display: inline-block;" data-toggle="tooltip" title="Add to Playlist">
+                        <a href="#" class="play-song" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="fa-stack fa-sm">
+                                <i class="fa fa-circle fa-stack-2x icol"></i>
+                                <i class="fa fa-plus fa-stack-1x" style="color: #fff; padding: 1px 1.5px 0px 0px;"></i>
+                            </span>
+                        </a>
+                    
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="padding: 0%;">
+                            <li class="dropdown-header" style="text-align: center; background-color: #c9c9c7; color: black;">Add to Playlist</li>
+                            {% for playlist in playlists %}
+                                <a class="dropdown-item" href="#">{{ playlist.title }}</a>
+                            {% endfor %}
+                        </div>
+                    </div>   
+
+                    <div class="dropdown" style="display: inline-block; margin-left: 10px;" data-toggle="tooltip" title="Options">
                         <a href="#" class="play-song" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="fa-stack fa-sm">
                                 <i class="fa fa-ellipsis-h my-2" style="font-size:24px; color: white;"></i>
@@ -31,24 +48,21 @@
                             <a class="dropdown-item" href="#">Rate</a>
                             <a class="dropdown-item" href="#">Option 3</a>
                         </div>
-                    </div>
+                    </div>                    
                 </div>
                 {% endfor %}
             </div>
         </div>
 
-        
-
-
         <div class="recommended">
             <h3>Albums</h3>
             <div class="media_scroller text-white">
                 {% for album in albums %}
-                <div class="media-element">
+                <a href="{{ url_for('album', album_name=album.title) }}" class="media-element" style="text-decoration: none; color: #fff;" data-toggle="tooltip" title="Click to show Album">
                     <img src="{{ url_for('get_album_cover', album_id=album.id) }}" alt="{{ album.title }} Cover">
                     <p class="title" style="margin-bottom: 0px;">{{ album.title }}</p>
                     <p style="font-size: 15px;">{{ album.user.name }}</p>
-                </div>
+                </a>
                 {% endfor %}
             </div>
         </div>
@@ -146,7 +160,7 @@
         <h3 style="margin: 85px 0px 12px 30px;">My Playlists</h3>
     </div>
     <div class="col-3 add">
-        <a href="/user/newPlaylist" class="add-button">
+        <a href="/user/newPlaylist" class="add-button" data-toggle="tooltip" title="Create new Playlist">
             <span class="fa-stack fa-sm">
                 <i class="fa fa-circle fa-stack-2x icol"></i>
                 <i class="fa fa-plus fa-stack-1x" style="color: #fff; padding: 1px 1.5px 0px 0px;"></i>
@@ -157,7 +171,7 @@
 
 <div class="playlists">
     {% for playlist in playlists %}
-        <li class="playlistItem"><a href="#">{{ playlist.title }}</a></li>
+        <li class="playlistItem"><a href="{{ url_for('playlist', playlist_name=playlist.title) }}">{{ playlist.title }}</a></li>
     {% endfor %}
 </div>
 {% endblock leftpane %}

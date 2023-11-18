@@ -1,7 +1,7 @@
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css");
-@import "https://unpkg.com/open-props";
-@import "https://unpkg.com/open-props/normalize.min.css";
-@import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css";
+@import url("https://unpkg.com/open-props");
+@import url("https://unpkg.com/open-props/normalize.min.css");
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css");
 
 
 *{
@@ -217,7 +217,7 @@ header .left_pane .playlists{
     overflow-y:auto; 
     position:relative;
     height: 270px;
-    background: #b3a485;
+    background: #b3b499;
     /* border: 1px solid black; */
 }
 
@@ -261,7 +261,7 @@ header .left_pane .playlists::-webkit-scrollbar-thumb{
 
 header .left_pane .add{
     padding-top: 87px;
-    padding-left: 60px;
+    padding-left: 85px;
     /* border: 1px solid black; */
 }
 
