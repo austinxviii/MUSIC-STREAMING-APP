@@ -406,6 +406,26 @@ def delete_album(album_id):
     return redirect(url_for('creatorDashboard'))
 
 
+
+# USER - UPDATE ALBUM
+@app.route('/user/Album/updateAlbum/<string:album_name>', methods=['GET', 'POST'])
+def updateAlbum(album_name):
+    current_user = get_current_user()
+    album = Album.query.filter_by(title=album_name, user_id=current_user.id).first()
+    if request.method == 'POST':
+        new_title = request.form.get('title')
+        new_cover = request.files['cover']
+        if album:
+            album.title = new_title
+            if new_cover:
+                album.cover = new_cover.read()
+            db.session.commit()
+            return redirect(url_for('creatorDashboard'))
+    return render_template('user/Album/updateAlbum.html', album_name=album_name, csspage='/static/uploadSongs.css')
+
+
+
+
 # DELETE SONG
 @app.route('/user/deleteSong/<int:song_id>')
 def delete_song(song_id):
@@ -419,6 +439,36 @@ def delete_song(song_id):
             db.session.commit()
 
     return redirect(url_for('creatorDashboard'))
+
+
+
+# USER - UPDATE SONG
+@app.route('/user/Album/updateSong/<string:song_name>', methods=['GET', 'POST'])
+def updateSong(song_name):
+    current_user = get_current_user()
+    song = Song.query.filter_by(title=song_name).first()
+    if request.method == 'POST':
+        new_title = request.form.get('title')
+        new_album_id = int(request.form.get('album'))
+        new_genre = request.form.get('genre')
+        new_lyrics = request.files['lyrics']
+        new_file_data = request.files['songfile']
+        if song:
+            if new_title:
+                song.title = new_title
+            if new_album_id:
+                song.album_id = new_album_id
+            if new_genre:
+                song.genre = new_genre
+            if new_lyrics:
+                song.lyrics = new_lyrics.read()
+            if new_file_data:
+                song.file_data = new_file_data.read()
+            db.session.commit()
+            return redirect(url_for('creatorDashboard'))
+    albums = Album.query.filter_by(user_id=current_user.id).all()
+    return render_template('user/Song/updateSong.html', song_name=song_name, albums=albums, csspage='/static/uploadSongs.css')
+
 
 # USER - NEW PLAYLIST
 @app.route('/user/Playlist/newPlaylist', methods=['POST', 'GET'])
@@ -519,7 +569,6 @@ def updatePlaylist(playlist_name):
         new_title = request.form.get('title')
         # Find the playlist by name and user ID
         playlist = Playlist.query.filter_by(title=playlist_name, user_id=current_user.id).first()
-        print(playlist)
         if playlist:
             # Update the playlist title
             playlist.title = new_title
