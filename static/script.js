@@ -5,11 +5,17 @@ document.querySelectorAll('.play-song').forEach(link => {
         playSong(songId);
     });
     const ellipsisIcon = link.querySelector('.fa-ellipsis-h');
+    const plusIcon = link.querySelector('.fa-plus');
     if (ellipsisIcon) {
         ellipsisIcon.addEventListener('click', function(event) {
-            event.stopPropagation(); // Prevent the click event from propagating to the parent (play-song link)
-            // Add your ellipsis icon click logic here
+            event.stopPropagation();
             console.log('Ellipsis icon clicked');
+        });
+    }
+    if (plusIcon) {
+        plusIcon.addEventListener('click', function(event) {
+            event.stopPropagation(); 
+            console.log('Plus icon clicked');
         });
     }
 });

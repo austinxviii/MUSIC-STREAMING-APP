@@ -308,20 +308,20 @@ def get_song(song_id):
 
 
 # USER - CREATOR
-@app.route('/user/existCreator')
+@app.route('/user/Creator/existCreator')
 def creator():
     # Assuming you have a function to get the current user based on your authentication logic
     current_user = get_current_user()
 
     if current_user and current_user.is_creator:
-        return render_template('/user/existCreator.html', csspage='/static/existcreat.css')
+        return render_template('/user/Creator/existCreator.html', csspage='/static/existcreat.css')
     else:
-        return redirect('/user/newCreator')
+        return redirect('/user/Creator/newCreator')
 
 # USER - NEW CREATOR
-@app.route('/user/newCreator')
+@app.route('/user/Creator/newCreator')
 def newCreator():
-    return render_template('user/newCreator.html', csspage='/static/existcreat.css')
+    return render_template('user/Creator/newCreator.html', csspage='/static/existcreat.css')
 
 # CREATOR - REGISTER
 @app.route('/user/registerAsCreator')
@@ -334,11 +334,11 @@ def register_as_creator():
         current_user.is_creator = True
         db.session.commit()
 
-    return redirect('/user/existCreator')
+    return redirect('/user/Creator/existCreator')
 
 
 # CREATOR - NEW ALBUM
-@app.route('/user/newAlbum', methods=['GET', 'POST'])
+@app.route('/user/Album/newAlbum', methods=['GET', 'POST'])
 def newAlbum():
     current_user = get_current_user()
     if request.method == 'POST':
@@ -348,11 +348,11 @@ def newAlbum():
         album = Album(title=title, cover=cover.read(), user_id=current_user.id)
         db.session.add(album)
         db.session.commit()
-        return redirect('/user/existCreator')
-    return render_template('/user/newAlbum.html', csspage = '/static/uploadSongs.css')
+        return redirect('/user/Creator/existCreator')
+    return render_template('/user/Album/newAlbum.html', csspage = '/static/uploadSongs.css')
 
 # CREATOR UPLOAD SONGS
-@app.route('/user/uploadSongs', methods=['POST', 'GET'])
+@app.route('/user/Song/uploadSongs', methods=['POST', 'GET'])
 def uploadSongs():
     current_user = get_current_user()
     if request.method == 'POST':
@@ -366,20 +366,20 @@ def uploadSongs():
         db.session.add(song)
         db.session.commit()
 
-        return redirect('/user/uploadSongs')
+        return redirect('/user/Song/uploadSongs')
     albums = Album.query.filter_by(user_id=current_user.id).all()
-    return render_template('/user/uploadSongs.html', csspage = '/static/uploadSongs.css', albums=albums)
+    return render_template('/user/Song/uploadSongs.html', csspage = '/static/uploadSongs.css', albums=albums)
 
 
 # CREATOR - DASHBOARD
-@app.route('/user/creatorDashboard')
+@app.route('/user/Creator/creatorDashboard')
 def creatorDashboard():
     # Assuming you have a way to identify the current user (replace get_current_user with your logic)
     current_user = get_current_user()
     if current_user and current_user.is_creator:
         # Query albums associated with the current user
         albums = Album.query.filter_by(user_id=current_user.id).all()
-        return render_template('/user/creatorDashboard.html', csspage='/static/uploadSongs.css', albums=albums)
+        return render_template('/user/Creator/creatorDashboard.html', csspage='/static/uploadSongs.css', albums=albums)
     else:
         # Redirect to login or handle the case where the user is not a creator
         return redirect('/user/')  # Redirect to the login page or handle accordingly
@@ -421,7 +421,7 @@ def delete_song(song_id):
     return redirect(url_for('creatorDashboard'))
 
 # USER - NEW PLAYLIST
-@app.route('/user/newPlaylist', methods=['POST', 'GET'])
+@app.route('/user/Playlist/newPlaylist', methods=['POST', 'GET'])
 def newPlaylist():
     if request.method == 'POST':
         current_user = get_current_user()
@@ -431,12 +431,12 @@ def newPlaylist():
         db.session.add(playlist)
         db.session.commit()
 
-        return redirect('/user/newPlaylist')
-    return render_template('/user/newPlaylist.html', csspage='/static/uploadSongs.css')
+        return redirect('/user/userDashboard')
+    return render_template('/user/PLaylist/newPlaylist.html', csspage='/static/uploadSongs.css')
 
 
 # USER - ALBUM DISPLAY
-@app.route('/user/album')
+@app.route('/user/Album/album')
 def album():
     current_user = get_current_user()
     albums = Album.query.all()
@@ -444,11 +444,11 @@ def album():
     album = Album.query.filter_by(title=album_name).first()
     songs = Song.query.filter_by(album_id=album.id).all()
     playlists = Playlist.query.filter_by(user_id=current_user.id).all()
-    return render_template('/user/album.html', songs=songs, albums=albums, playlists=playlists, album_name=album.title, include_musicplayer=True)
+    return render_template('/user/Album/album.html', songs=songs, albums=albums, playlists=playlists, album_name=album.title, include_musicplayer=True)
 
 
 # USER - PLAYLIST DISPLAY
-@app.route('/user/playlist')
+@app.route('/user/Playlist/playlist')
 def playlist():
     current_user = get_current_user()
     albums = Album.query.all()
@@ -464,7 +464,69 @@ def playlist():
         songs = []
 
     playlists = Playlist.query.filter_by(user_id=current_user.id).all()
-    return render_template('/user/playlist.html', songs=songs, albums=albums, playlists=playlists, playlist_name=playlist_name, include_musicplayer=True)
+    return render_template('/user/Playlist/playlist.html', songs=songs, albums=albums, playlists=playlists, playlist_name=playlist_name, include_musicplayer=True)
+
+# USER - ADD TO PLAYLIST
+@app.route('/add_to_playlist', methods=['POST'])
+def add_to_playlist():
+    playlist_id = request.form.get('playlist_id')
+    song_id = request.form.get('song_id')
+
+    # Perform database operations to add the song to the playlist
+    playlist = Playlist.query.get(playlist_id)
+    song = Song.query.get(song_id)
+
+    if playlist and song:
+        playlist.songs.append(song)
+        db.session.commit()
+
+    # Redirect to the previous page or wherever you want
+    return redirect(url_for('userDashboard'))
+
+
+# USER - DELETE PLAYLIST SONG
+@app.route('/user/Playlist/deletePlaylistSong/<int:song_id>/<string:playlist_name>')
+def deletePlaylistSong(song_id, playlist_name):
+    playlist = Playlist.query.filter_by(title=playlist_name).first()
+    song = Song.query.get(song_id)
+
+    if playlist and song:
+        playlist.songs.remove(song)
+        db.session.commit()
+    return redirect(url_for('playlist', playlist_name=playlist_name,))
+
+
+
+# USER - DELETE PLAYLIST
+@app.route('/user/deleteSong/<int:playlist_id>')
+def deletePlaylist():
+    if request.method == 'POST':
+        current_user = get_current_user()
+        title = request.form.get('title')
+
+        playlist = Playlist(title=title, user_id=current_user.id)
+        db.session.add(playlist)
+        db.session.commit()
+
+        return redirect('/user/userDashboard')
+
+
+# USER - UPDATE PLAYLIST
+@app.route('/user/Playlist/updatePlaylist/<string:playlist_name>', methods=['GET', 'POST'])
+def updatePlaylist(playlist_name):
+    current_user = get_current_user()
+    if request.method == 'POST':
+        new_title = request.form.get('title')
+        # Find the playlist by name and user ID
+        playlist = Playlist.query.filter_by(title=playlist_name, user_id=current_user.id).first()
+        print(playlist)
+        if playlist:
+            # Update the playlist title
+            playlist.title = new_title
+            db.session.commit()
+            return redirect(url_for('playlist', playlist_name=new_title))
+    return render_template('user/Playlist/updatePlaylist.html', playlist_name=playlist_name, csspage='/static/uploadSongs.css')
+
 
 
 
