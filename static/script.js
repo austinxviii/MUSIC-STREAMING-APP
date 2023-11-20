@@ -55,12 +55,19 @@ function playSong(songId) {
             const creatorNameDisplay = document.getElementById('creatorNameDisplay');
             creatorNameDisplay.textContent = creatorName;
 
+            fetch(`/get_lyrics/${songId}`)
+                .then(response => response.text())
+                .then(lyrics => {
+                    const lyricsContainer = document.getElementById('lyrics-container');
+                    lyricsContainer.textContent = lyrics;
+            });
+
             fetch(`/album_cover/${songId}`)
                 .then(response => response.blob())
                 .then(coverBlob => {
                     const songCoverDisplay = document.getElementById('songCoverDisplay');
                     const coverObjectURL = URL.createObjectURL(coverBlob);
                     songCoverDisplay.src = coverObjectURL;
-                });
+            });
         });
 }
