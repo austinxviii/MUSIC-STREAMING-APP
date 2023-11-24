@@ -30,10 +30,13 @@
                     <a href="#"><li>Something</li></a>
                     <a href="/user/logout" style="margin-left: 150px;"><li>Logout</li></a>
                 </ul>
-                <div class="search">
-                    <i class="bi bi-search"></i>
-                    <input type="text" placeholder="Search Music">
-                </div>
+                <form method="post" action="{{ url_for('search') }}">
+                    <div class="search">
+                        <i class="bi bi-search"></i>
+                        <input type="text" name="search" placeholder="Search Music" autocomplete=“off”/>
+                        <button type="submit"></button>
+                    </div>
+                </form>
             </nav>
             {% block rightpane %} {% endblock rightpane %}
         </div> 

@@ -91,6 +91,10 @@ class Song(db.Model):
 db.create_all()
 
 
+# admin = Admin(username='admin', password=bcrypt.generate_password_hash('admin@123', 10))
+# db.session.add(admin)
+# db.session.commit()
+
 def get_current_user():
     # Get the user ID from the session
     user_id = session.get('user_id')
@@ -249,7 +253,7 @@ def userLogout():
         session['user_id'] = None
         session['username'] = None
         flash("Logged Out Successfully! Login again to enter", 'danger')
-        return redirect('/user/')
+        return redirect('/')
 
 # USER CHANGE PASSWORD
 @app.route('/user/change-password', methods=["POST", "GET"])
@@ -290,6 +294,15 @@ def userDashboard():
     all_genres = [genre[0] for genre in genres]
     creators = User.query.filter_by(is_creator=1).all()
     return render_template('/user/userDashboard.html', songs=songs, albums=albums, playlists=playlists, include_musicplayer=True, creators=creators, all_genres=all_genres)
+
+# USER - SEARCH
+@app.route('/user/search', methods=['POST'])
+def search():
+    search_query = request.form.get('search')
+    songs = Song.query.filter(Song.title.ilike(f"%{search_query}%")).all()
+    albums = Album.query.filter(Album.title.ilike(f"%{search_query}%")).all()
+    creators = User.query.filter(User.name.ilike(f"%{search_query}%"), User.is_creator == 1).all()
+    return render_template('user/search.html', songs=songs, search_query=search_query, albums=albums, creators=creators, include_musicplayer=True)
 
 # GET COVER
 @app.route('/album_cover/<int:album_id>')

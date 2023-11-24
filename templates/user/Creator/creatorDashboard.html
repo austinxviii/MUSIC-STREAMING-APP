@@ -4,59 +4,61 @@
 <div class="my-3 mx-4">
     <h4>All Albums</h4>
 </div>
-<div class="my-3 mx-3">
-    <div class="table-responsive">
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Sr.No</th>
-                    <th>Album Name</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for album in albums %}
+<div class="tableflow">
+    <div class="my-3 mx-3">
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
                     <tr>
-                        <td>{{ loop.index }}</td>
-                        <td>{{ album.title }}</td>
-                        <td>
-                            <button class="btn btn-primary btn-sm" onclick="toggleSongs('{{ album.id }}', this)">Expand</button>
-                            <button class="btn btn-success btn-sm" onclick="window.location.href = '/user/Song/uploadSongs';">Add Songs</button>
-                            <button class="btn btn-info btn-sm" onclick="window.location.href = `{{ url_for('updateAlbum', album_name=album.title) }}`;">Update Album</button>
-                            <button class="btn btn-danger btn-sm" onclick="deleteAlbum('{{ album.id }}')">Delete Album</button>
-                        </td>
+                        <th>Sr.No</th>
+                        <th>Album Name</th>
+                        <th>Action</th>
                     </tr>
-                    <tr class="song-table" id="songs_{{ album.id }}" style="display: none;">
-                        <td colspan="3">
-                            <!-- Add a nested table for songs -->
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>Sr.No</th>
-                                        <th>Song Name</th>
-                                        <th>Genre</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for song in album.songs %}
+                </thead>
+                <tbody>
+                    {% for album in albums %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ album.title }}</td>
+                            <td>
+                                <button class="btn btn-primary btn-sm" onclick="toggleSongs('{{ album.id }}', this)">Expand</button>
+                                <button class="btn btn-success btn-sm" onclick="window.location.href = '/user/Song/uploadSongs';">Add Songs</button>
+                                <button class="btn btn-info btn-sm" onclick="window.location.href = `{{ url_for('updateAlbum', album_name=album.title) }}`;">Update Album</button>
+                                <button class="btn btn-danger btn-sm" onclick="deleteAlbum('{{ album.id }}')">Delete Album</button>
+                            </td>
+                        </tr>
+                        <tr class="song-table" id="songs_{{ album.id }}" style="display: none;">
+                            <td colspan="3">
+                                <!-- Add a nested table for songs -->
+                                <table class="table table-bordered">
+                                    <thead>
                                         <tr>
-                                            <td>{{ loop.index }}</td>
-                                            <td>{{ song.title }}</td>
-                                            <td>{{ song.genre }}</td>
-                                            <td>
-                                                <button class="btn btn-info btn-sm" onclick="window.location.href = `{{ url_for('updateSong', song_name=song.title) }}`;">Update Song</button>
-                                                <button class="btn btn-danger btn-sm" onclick="deleteSong('{{ album.id }}', '{{ song.id }}')">Delete Song</button>
-                                            </td>
+                                            <th>Sr.No</th>
+                                            <th>Song Name</th>
+                                            <th>Genre</th>
+                                            <th>Action</th>
                                         </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                                    </thead>
+                                    <tbody>
+                                        {% for song in album.songs %}
+                                            <tr>
+                                                <td>{{ loop.index }}</td>
+                                                <td>{{ song.title }}</td>
+                                                <td>{{ song.genre }}</td>
+                                                <td>
+                                                    <button class="btn btn-info btn-sm" onclick="window.location.href = `{{ url_for('updateSong', song_name=song.title) }}`;">Update Song</button>
+                                                    <button class="btn btn-danger btn-sm" onclick="deleteSong('{{ album.id }}', '{{ song.id }}')">Delete Song</button>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 

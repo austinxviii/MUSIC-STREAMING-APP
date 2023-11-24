@@ -43,13 +43,11 @@
         <label>Upload Song (in .MP3 file) &nbsp;</label>
         <input type="file" name="songfile" id="songfile"/>
     </div>
-    
-    <br>
-
-    <a href="/user/Creator/creatorDashboard">Upload Complete? Go back</a>
 
     <br>
     
-    <button class="upload">Submit</button>
+    <button class="btn btn-success btn-sm mx-5 my-2">Submit</button>
+
 </form>
+    <button class="btn btn-primary btn-sm mx-5 my-2" onclick="window.location.href = '/user/Creator/creatorDashboard';">Upload Complete? Go Back</button>
 {% endblock rightpane %}

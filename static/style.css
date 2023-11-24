@@ -111,7 +111,7 @@ header .right_pane .song_carousels{
 }
 
 header .right_pane .song_carousels::-webkit-scrollbar{
-    width: 14px;
+    width: 7px;
 }
 
 header .right_pane .song_carousels::-webkit-scrollbar-track{
@@ -301,7 +301,6 @@ header .left_pane .playlists::-webkit-scrollbar{
 
 header .left_pane .playlists::-webkit-scrollbar-track{
     background: #B3A492;
-    ;
 }
 
 header .left_pane .playlists::-webkit-scrollbar-thumb{
