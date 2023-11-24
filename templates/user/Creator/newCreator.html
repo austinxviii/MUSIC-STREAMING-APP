@@ -16,7 +16,11 @@
         In sit amet sollicitudin nisl. Vivamus at neque a elit sagittis egestas vel vel tortor. 
         Cras auctor ligula urna, quis ullamcorper mauris blandit sed. Vivamus tempor elementum leo, feugiat feugiat elit rhoncus a.
         </p>
-        <button class="btn btn-success btn-sm mx-5 my-2" onclick="registerAsCreator();">Register as Creator?</button>
+        <form style="margin-left: 50px;" action="" method="POST" enctype="multipart/form-data">
+            <label>Upload your Profile Picture &nbsp;</label>
+            <input type="file" name="profile" id="profile"/>
+            <button class="btn btn-success btn-sm mx-5 my-2">Register as Creator?</button>
+        </form>
 
         <script>
             function registerAsCreator() {

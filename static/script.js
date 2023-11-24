@@ -20,6 +20,7 @@ document.querySelectorAll('.play-song').forEach(link => {
     }
 });
 
+
 function playSong(songId) {
     fetch(`/get_song/${songId}`)
         .then(response => response.blob())

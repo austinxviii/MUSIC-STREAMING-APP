@@ -70,54 +70,28 @@
                 {% endfor %}
             </div>
         </div>
+        
         <div class="recommended">
             <h3>Genre</h3>
             <div class="media_scroller text-white">
-                <div class="media-element">
-                    <img src="https://images.unsplash.com/photo-1641353989082-9b15fa661805?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxNDU4OXwwfDF8cmFuZG9tfHx8fHx8fHx8MTY0MzM5ODcyOA&ixlib=rb-1.2.1&q=80&w=400">
-                    <p class="title">Title</p>
-                </div>
-                <div class="media-element">
-                    <img src="https://images.unsplash.com/photo-1640938776314-4d303f8a1380?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxNDU4OXwwfDF8cmFuZG9tfHx8fHx8fHx8MTY0MzM5ODc2Mw&ixlib=rb-1.2.1&q=80&w=400">
-                    <p class="title">Title</p>
-                </div>
-                <div class="media-element">
-                    <img src="https://images.unsplash.com/photo-1642543492481-44e81e3914a7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxNDU4OXwwfDF8cmFuZG9tfHx8fHx8fHx8MTY0MzM5ODc2Mw&ixlib=rb-1.2.1&q=80&w=400"></img>
-                    <p class="title">Title</p>
-                </div>
-                <div class="media-element">
-                    <img src="https://images.unsplash.com/photo-1641259041823-e09935369105?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxNDU4OXwwfDF8cmFuZG9tfHx8fHx8fHx8MTY0MzM5ODc2Mw&ixlib=rb-1.2.1&q=80&w=400"></img>
-                    <p class="title">Title</p>
-                </div>
-                <div class="media-element">
-                    <img src="https://images.unsplash.com/photo-1641259041823-e09935369105?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxNDU4OXwwfDF8cmFuZG9tfHx8fHx8fHx8MTY0MzM5ODc2Mw&ixlib=rb-1.2.1&q=80&w=400"></img>
-                    <p class="title">Title</p>
-                </div>
-                <div class="media-element">
-                    <img src="https://images.unsplash.com/photo-1641353989082-9b15fa661805?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxNDU4OXwwfDF8cmFuZG9tfHx8fHx8fHx8MTY0MzM5ODcyOA&ixlib=rb-1.2.1&q=80&w=400">
-                    <p class="title">Title</p>
-                </div>
-                <div class="media-element">
-                    <img src="https://images.unsplash.com/photo-1640938776314-4d303f8a1380?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxNDU4OXwwfDF8cmFuZG9tfHx8fHx8fHx8MTY0MzM5ODc2Mw&ixlib=rb-1.2.1&q=80&w=400">
-                    <p class="title">Title</p>
-                </div>
-                <div class="media-element">
-                    <img src="https://images.unsplash.com/photo-1642543492481-44e81e3914a7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxNDU4OXwwfDF8cmFuZG9tfHx8fHx8fHx8MTY0MzM5ODc2Mw&ixlib=rb-1.2.1&q=80&w=400"></img>
-                    <p class="title">Title</p>
-                </div>
-                <div class="media-element">
-                    <img src="https://images.unsplash.com/photo-1641259041823-e09935369105?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxNDU4OXwwfDF8cmFuZG9tfHx8fHx8fHx8MTY0MzM5ODc2Mw&ixlib=rb-1.2.1&q=80&w=400"></img>
-                    <p class="title">Title</p>
-                </div>
+                {% for genre in all_genres %}
+                    <a href="{{ url_for('genre', genre_name=genre) }}" class="media-element" style="text-decoration: none; color: #fff;" data-toggle="tooltip" title="Click to view genre">
+                        <img src="https://routenote.com/blog/wp-content/uploads/2021/10/ifpi-report-engaging-with-music-2021.png">
+                        <p class="title" style="text-decoration: none;">{{ genre }}</p>
+                    </a>
+                {% endfor %}
             </div>
         </div>
+        
         <div class="recommended">
             <h3>Creators</h3>
-            <div class="media_scroller text-white">
-                <div class="media-element">
-                    <img src="https://images.unsplash.com/photo-1641353989082-9b15fa661805?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxNDU4OXwwfDF8cmFuZG9tfHx8fHx8fHx8MTY0MzM5ODcyOA&ixlib=rb-1.2.1&q=80&w=400">
-                    <p class="title">Title</p>
-                </div>
+            <div class="media_scroller_creator text-white">
+                {% for creator in creators %}
+                    <a href="{{ url_for('viewCreator', user_name=creator.name) }}" class="media-element-creator" style="text-decoration: none;" data-toggle="tooltip" title="Click to show the Creator">
+                        <img src="{{ url_for('get_user_profile', user_id=creator.id) }}">
+                        <p class="title my-4 text-dark" style="text-decoration: none;">{{ creator.name }}</p>
+                    </a>
+                {% endfor %}
             </div>
         </div>
     </div>

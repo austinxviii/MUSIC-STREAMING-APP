@@ -1,0 +1,61 @@
+{% extends "user/layout.html"%}
+
+{% block rightpane %}
+    <div class="song_carousels">
+        <div class="recommended">
+            <h3>{{ user_name }} - All Albums</h3>
+            <div class="media_scroller text-white">
+                {% for album in albums %}
+                    <a href="{{ url_for('album', album_name=album.title) }}" class="media-element" style="text-decoration: none; color: #fff;" data-toggle="tooltip" title="Click to show Album">
+                        <img src="{{ url_for('get_album_cover', album_id=album.id) }}" alt="{{ album.title }} Cover">
+                        <p class="title" style="margin-bottom: 0px;">{{ album.title }}</p>
+                        <p style="font-size: 15px;">{{ album.user.name }}</p>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock rightpane %}
+
+
+
+{% block leftpane %}
+
+<div class="row">
+    <div class="col-7">
+        <h3 style="margin: 85px 0px 12px 30px;">My Playlists</h3>
+    </div>
+    <div class="col-3 add">
+        <a href="/user/newPlaylist" class="add-button">
+            <span class="fa-stack fa-sm">
+                <i class="fa fa-circle fa-stack-2x icol"></i>
+                <i class="fa fa-plus fa-stack-1x" style="color: #fff; padding: 1px 1.5px 0px 0px;"></i>
+            </span>
+        </a>
+    </div>
+</div>
+
+<div class="playlists">
+    {% for playlist in playlists %}
+        <li class="playlistItem"><a href="#">{{ playlist.title }}</a></li>
+    {% endfor %}
+</div>
+{% endblock leftpane %}
+
+
+{% block musicplay %}
+<div class="song_image">
+    <img id="songCoverDisplay" src="" alt="">
+</div>
+<div class="disp">
+    <div class="top">
+        <h5 id="songNameDisplay" style="margin: 0px 0px;">Play a Song</h5>
+        <h6 id="creatorNameDisplay">Enjoy!</h6>
+    </div>
+    <div class="bottom">
+        <audio controls="" autoplay name="media" id="audio-player">
+            <source src="" type="audio/mpeg">
+        </audio>
+    </div>
+</div>
+{% endblock musicplay %}

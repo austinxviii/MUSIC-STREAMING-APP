@@ -160,6 +160,33 @@ header .right_pane .song_carousels .recommended .media_scroller::-webkit-scrollb
     border: 2px solid #DADDB1;
 }
 
+header .right_pane .song_carousels .recommended .media_scroller_creator::-webkit-scrollbar{
+    height: 14px;
+}
+
+header .right_pane .song_carousels .recommended .media_scroller_creator::-webkit-scrollbar-track{
+    background: #DADDB1;
+}
+
+header .right_pane .song_carousels .recommended .media_scroller_creator::-webkit-scrollbar-thumb{
+    background-color: var(--surface-2);
+    border-radius: 20px;
+    border: 2px solid #DADDB1;
+}
+
+header .right_pane .song_carousels .recommended .media_scroller_creator{
+    width: 100%;
+    height: 250px;
+    margin-top: 15px;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 21%;
+    gap: var(--size-3);
+    overflow-x: auto;
+    background: #DADD99;
+    padding: 10px 10px 10px 10px;
+}
+
 header .right_pane .song_carousels .recommended .media_scroller .media-element{
     padding: var(--size-3);
     background: var(--surface-4);
@@ -170,6 +197,23 @@ header .right_pane .song_carousels .recommended .media_scroller .media-element >
     inline-size: 100%;
     aspect-ratio: 14 / 9;
     object-fit: cover;
+}
+
+header .right_pane .song_carousels .recommended .media_scroller_creator .media-element-creator{
+    padding: var(--size-3);
+    background: var(--surface-4);
+    border-radius: 100px;
+    height: 200px;
+    text-align: center;
+}
+
+header .right_pane .song_carousels .recommended .media_scroller_creator .media-element-creator > img{
+    inline-size: 100%;
+    aspect-ratio: 14 / 9;
+    object-fit: cover;
+    border-radius: 190px;
+    width: 180px;
+    height: 165px;
 }
 
 header .right_pane .song_carousels .recommended .media_scroller .media-element .icol{
@@ -293,7 +337,7 @@ header .left_pane .playlists li a:hover{
 
 
 header .left_pane .lyrics{
-    width: auto;
+    width: 317px;
     height: 200px;
     /* border: 1px solid black; */
     background: #b3b499;

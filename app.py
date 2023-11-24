@@ -23,6 +23,7 @@ class User(db.Model):
     name = db.Column(db.String(255), nullable = False)
     email = db.Column(db.String(255), nullable = False)
     is_creator = db.Column(db.Boolean, default=False)
+    profile = db.Column(db.LargeBinary, nullable=True)
     albums = db.relationship('Album', backref='user')
     playlists = db.relationship('Playlist', backref='user')
     username = db.Column(db.String(255), nullable = False)
@@ -285,7 +286,10 @@ def userDashboard():
     songs = Song.query.all()
     albums = Album.query.all()
     playlists = Playlist.query.filter_by(user_id=current_user.id).all()
-    return render_template('/user/userDashboard.html', songs=songs, albums=albums, playlists=playlists, include_musicplayer=True)
+    genres = db.session.query(Song.genre).distinct().all()
+    all_genres = [genre[0] for genre in genres]
+    creators = User.query.filter_by(is_creator=1).all()
+    return render_template('/user/userDashboard.html', songs=songs, albums=albums, playlists=playlists, include_musicplayer=True, creators=creators, all_genres=all_genres)
 
 # GET COVER
 @app.route('/album_cover/<int:album_id>')
@@ -293,6 +297,15 @@ def get_album_cover(album_id):
     album = Album.query.get(album_id)
     if album and album.cover:
         return send_file(io.BytesIO(album.cover), mimetype='image/jpg')
+    else:
+        return send_file('path/to/placeholder.jpg', mimetype='image/jpeg')
+        
+# GET PROFILE PIC
+@app.route('/profile_pic/<int:user_id>')
+def get_user_profile(user_id):
+    user = User.query.get(user_id)
+    if user and user.profile:
+        return send_file(io.BytesIO(user.profile), mimetype='image/jpeg')
     else:
         return send_file('path/to/placeholder.jpg', mimetype='image/jpeg')
 
@@ -319,9 +332,21 @@ def creator():
         return redirect('/user/Creator/newCreator')
 
 # USER - NEW CREATOR
-@app.route('/user/Creator/newCreator')
+@app.route('/user/Creator/newCreator', methods=['GET', 'POST'])
 def newCreator():
-    return render_template('user/Creator/newCreator.html', csspage='/static/existcreat.css')
+    current_user = get_current_user()
+    if request.method == 'POST':
+        profile = request.files['profile']
+        
+        # Print some information about the file
+        print(f"Filename: {profile.filename}")
+        print(f"Content Type: {profile.content_type}")
+
+        # Read and set the profile image
+        current_user.profile = profile.read()
+        db.session.commit()
+        return redirect('/user/registerAsCreator')
+    return render_template('user/Creator/newCreator.html', csspage='/static/uploadSongs.css')
 
 # CREATOR - REGISTER
 @app.route('/user/registerAsCreator')
@@ -489,11 +514,12 @@ def newPlaylist():
 @app.route('/user/Album/album')
 def album():
     current_user = get_current_user()
-    albums = Album.query.all()
-    album_name = request.args.get('album_name', '')
-    album = Album.query.filter_by(title=album_name).first()
-    songs = Song.query.filter_by(album_id=album.id).all()
-    playlists = Playlist.query.filter_by(user_id=current_user.id).all()
+    if current_user:
+        albums = Album.query.all()
+        album_name = request.args.get('album_name', '')
+        album = Album.query.filter_by(title=album_name).first()
+        songs = Song.query.filter_by(album_id=album.id).all()
+        playlists = Playlist.query.filter_by(user_id=current_user.id).all()
     return render_template('/user/Album/album.html', songs=songs, albums=albums, playlists=playlists, album_name=album.title, include_musicplayer=True)
 
 
@@ -515,6 +541,26 @@ def playlist():
 
     playlists = Playlist.query.filter_by(user_id=current_user.id).all()
     return render_template('/user/Playlist/playlist.html', songs=songs, albums=albums, playlists=playlists, playlist_name=playlist_name, include_musicplayer=True)
+
+# USER - CREATOR DISPLAY
+@app.route('/user/Creator/creator')
+def viewCreator():
+    current_user = get_current_user()
+    users = User.query.all()
+    user_name = request.args.get('user_name', '')
+    user = User.query.filter_by(name=user_name).first()
+    albums = Album.query.filter_by(user_id=user.id).all()
+    playlists = Playlist.query.filter_by(user_id=current_user.id).all()
+    return render_template('/user/Creator/creator.html', albums=albums, playlists=playlists, user_name=user_name, include_musicplayer=True)
+
+# USER - GENRE DISPLAY
+@app.route('/user/Song/genre')
+def genre():
+    current_user = get_current_user()
+    genre_name = request.args.get('genre_name', '')
+    songs = Song.query.filter_by(genre=genre_name).all()
+    playlists = Playlist.query.filter_by(user_id=current_user.id).all()
+    return render_template('/user/Song/genre.html', songs=songs, playlists=playlists, genre_name=genre_name, include_musicplayer=True)
 
 # USER - ADD TO PLAYLIST
 @app.route('/add_to_playlist', methods=['POST'])
