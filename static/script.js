@@ -70,5 +70,13 @@ function playSong(songId) {
                     const coverObjectURL = URL.createObjectURL(coverBlob);
                     songCoverDisplay.src = coverObjectURL;
             });
+
+            fetch(`/album_cover_player/${songId}`)
+                .then(response => response.blob())
+                .then(coverBlob => {
+                    const songCoverDisplayPlayer = document.getElementById('songCoverDisplayPlayer');
+                    const coverObjectURL = URL.createObjectURL(coverBlob);
+                    songCoverDisplayPlayer.src = coverObjectURL;
+            });
         });
 }

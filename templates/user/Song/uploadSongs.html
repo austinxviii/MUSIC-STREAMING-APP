@@ -8,21 +8,21 @@
 </div>
 <form action="" method="POST" enctype="multipart/form-data">
     <div class="upload">
-        <label>Enter song title &nbsp;</label>
+        <label>Enter song title &nbsp;</label> <br>
         <input type="text" name="title" id="title"/>
     </div>
 
     <br>
 
     <div class="upload">
-        <label>Enter song genre &nbsp;</label>
+        <label>Enter song genre &nbsp;</label> <br>
         <input type="text" name="genre" id="genre"/>
     </div>
 
     <br>
 
     <div class="upload">
-        <label>Select Album &nbsp;</label>
+        <label>Select Album &nbsp;</label> <br>
         <select name="album" style="background-color: gray;">
             {% for album in albums %}
                 <option value="{{ album.id }}">{{ album.title }}</option>
@@ -33,14 +33,14 @@
     <br>
 
     <div class="upload">
-        <label>Upload Lyrics (in .txt file) &nbsp;</label>
+        <label>Upload Lyrics (in .txt file) &nbsp;</label> <br>
         <input type="file" name="lyrics" id="lyrics"/>
     </div>
 
     <br>
 
     <div class="upload">
-        <label>Upload Song (in .MP3 file) &nbsp;</label>
+        <label>Upload Song (in .MP3 file) &nbsp;</label> <br>
         <input type="file" name="songfile" id="songfile"/>
     </div>
 

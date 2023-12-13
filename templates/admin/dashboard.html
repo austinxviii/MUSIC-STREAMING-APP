@@ -54,14 +54,12 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
             <a class="navbar-brand mt-2 mt-lg-0" href="#">
-                <img src="https://mdbcdn.b-cdn.net/img/logo/mdb-transaprent-noshadows.webp" height="15" loading="lazy"/>
+                <h5>Music Player</h5>
             </a>
 
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link" href="#">Dashboard</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Team</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Projects</a></li>
-                <li class="nav-item"><a class="nav-link" href="/admin/all-users">All Users</a></li>
+                <li class="nav-item"><a class="nav-link" href="/admin/dashboard">All Users</a></li>
+                <li class="nav-item"><a class="nav-link" href="/admin/all-albums">All Albums</a></li>
             </ul>
         </div>
     
@@ -78,8 +76,6 @@
                 <img src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp" class="rounded-circle" height="30" loading="lazy"/>
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuAvatar">
-                <li><a class="dropdown-item" href="/admin/dashboard">My profile</a></li>
-                <li><a class="dropdown-item" href="/admin/dashboard">Settings</a></li>
                 <li><a class="dropdown-item" href="/admin/admin-change-password">Change Password</a></li>
                 <li><a class="dropdown-item" href="/admin/logout">Logout</a></li>
             </ul>
@@ -87,8 +83,42 @@
         </div>
         <!-- Right elements -->
         </div>
-        <!-- Container wrapper -->
     </nav>
-  <!-- Navbar -->
+    <h3 class="mx-5 my-4">All Users</h3>
+    <div class="my-3 mx-5">
+        <div class="table-responsive text-center">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Sr.No</th>
+                        <th>Name</th>
+                        <th>User Name</th>
+                        <th>Email</th>
+                        <th>Is Creator</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ user.name }}</td>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.is_creator }}</td>
+                            <td>
+                                <form action="{{ url_for('blacklistUser', user_id=user.id) }}" method="post">
+                                    <button class="btn {% if user.blacklist %}btn-success{% else %}btn-danger{% endif %} btn-sm" type="submit">
+                                        {% if user.blacklist %}Whitelist{% else %}Blacklist{% endif %} User
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
 </body>
 </html>

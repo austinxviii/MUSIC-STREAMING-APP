@@ -28,9 +28,10 @@ class User(db.Model):
     playlists = db.relationship('Playlist', backref='user')
     username = db.Column(db.String(255), nullable = False)
     password = db.Column(db.String(255), nullable = False)
+    blacklist = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
-        return f'User("{self.id}", "{self.name}", "{self.email}", "{self.username}")'
+        return f'User("{self.id}", "{self.name}", "{self.email}", "{self.username}", "{self.blacklist}")'
 
 
 # ADMIN CLASS
@@ -142,7 +143,8 @@ def adminIndex():
 def adminDashboard():
     if not session.get('admin_id'):
         return redirect('/admin/')
-    return render_template('/admin/dashboard.html', title="Admin Dashboard")
+    users = User.query.all()
+    return render_template('/admin/dashboard.html', title="Admin Dashboard", users=users)
 
 
 # ADMIN LOGOUT
@@ -156,38 +158,29 @@ def adminLogout():
         flash("Logged Out Successfully! Login again to enter", 'danger')
         return redirect('/')
 
-# ADMIN GET ALL USERS
-@app.route('/admin/all-users', methods=["POST","GET"])
-def adminGetAllUser():
-    if not session.get('admin_id'):
-        return redirect('/admin/')
-    if request.method== "POST":
-        search=request.form.get('search')
-        users=User.query.filter(User.username.like('%'+search+'%')).all()
-        return render_template('admin/all-users.html',users=users)
-    else:
-        users=User.query.all()
-        return render_template('admin/all-users.html',users=users)
+# ADMIN GET ALL ALBUMS
+@app.route('/admin/all-albums', methods=["POST","GET"])
+def adminGetAllAlbums():
+    albums = Album.query.all()
+    return render_template('/admin/all-albums.html', albums=albums)
 
+# DELETE ALBUM
+@app.route('/admin/deleteAlbum/<int:album_id>')
+def delete_album_admin(album_id):
+    album = Album.query.get(album_id)
+    if album:
+        db.session.delete(album)
+        db.session.commit()
+    return redirect(url_for('adminGetAllAlbums'))
 
-# ADMIN CHANGE PASSWORD
-@app.route('/admin/admin-change-password',methods=["POST","GET"])
-def adminChangePassword():
-    admin=Admin.query.get(1)
-    if request.method == 'POST':
-        username=request.form.get('username')
-        password=request.form.get('password')
-        if username == "" or password=="":
-            flash('Please enter all the fields','danger')
-            return redirect('/admin/admin-change-password')
-        else:
-            Admin().query.filter_by(username=username).update(dict(password=bcrypt.generate_password_hash(password,10)))
-            db.session.commit()
-            flash('Admin Password updated successfully','success')
-            return redirect('/admin/admin-change-password')
-    else:
-        return render_template('admin/admin-change-password.html',title='Admin Change Password',admin=admin)
-
+# DELETE SONG
+@app.route('/admin/deleteSong/<int:song_id>')
+def delete_song_admin(song_id):
+    song = Song.query.get(song_id)
+    if song:
+        db.session.delete(song)
+        db.session.commit()
+    return redirect(url_for('adminGetAllAlbums'))
 
 # --------- USER ---------
 
@@ -204,6 +197,9 @@ def userIndex():
 
         #CHECK USER EXISTS OR NOT
         users = User().query.filter_by(email=email).first()
+        if users and users.blacklist:
+            flash("You are blacklisted!", 'danger')
+            return redirect('/user/')
         if users and bcrypt.check_password_hash(users.password, password):
             session['user_id'] = users.id
             session['username'] = users.username
@@ -255,33 +251,6 @@ def userLogout():
         flash("Logged Out Successfully! Login again to enter", 'danger')
         return redirect('/')
 
-# USER CHANGE PASSWORD
-@app.route('/user/change-password', methods=["POST", "GET"])
-def userChangePassword():
-    if not session.get('user_id'):
-        return redirect('/user/')
-    if request.method == 'POST':
-        email = request.form.get('email')
-        username = request.form.get('username')
-        password = request.form.get('password')
-        if email == '' or username == '' or password == '':
-            flash("Enter all the fields", 'danger')
-            return redirect('/user/change-password')
-        else:
-            users = User.query.filter_by(email=email).first
-            if users:
-                hash_password = bcrypt.generate_password_hash(password, 10)
-                User.query.filter_by(email=email).update(dict(password = hash_password))
-                db.session.commit()
-                flash("Password changed successfully", 'success')
-                return redirect('/user/change-password')
-            else:
-                flash("Invalid Email", 'danger')
-                return redirect('/user/change-password')
-    else:
-        return render_template('/user/change-password.html', title="Change Password")
-
-
 
 # USER DASHBOARD
 @app.route('/user/userDashboard')
@@ -308,6 +277,17 @@ def search():
 @app.route('/album_cover/<int:album_id>')
 def get_album_cover(album_id):
     album = Album.query.get(album_id)
+    if album and album.cover:
+        return send_file(io.BytesIO(album.cover), mimetype='image/jpg')
+    else:
+        return send_file('path/to/placeholder.jpg', mimetype='image/jpeg')
+
+# GET COVER - MUSIC PLAYER
+@app.route('/album_cover_player/<int:songId>')
+def get_album_cover_musicPlayer(songId):
+    song = Song.query.get(songId)
+    albumId = song.album_id
+    album = Album.query.get(albumId)
     if album and album.cover:
         return send_file(io.BytesIO(album.cover), mimetype='image/jpg')
     else:
@@ -429,6 +409,16 @@ def get_lyrics(song_id):
         # Assuming the lyrics are stored as text in the database
         return song.lyrics.decode('utf-8')
     return "Lyrics not found", 404
+
+@app.route('/user/blacklistUser/<int:user_id>', methods=['GET', 'POST'])
+def blacklistUser(user_id):
+    user = User.query.get(user_id)
+    if user:
+        if request.method == 'POST':
+            user.blacklist = not user.blacklist  # Toggle blacklist status
+            db.session.commit()
+        return redirect('/admin/dashboard')
+
 
 
 # DELETE ALBUM
