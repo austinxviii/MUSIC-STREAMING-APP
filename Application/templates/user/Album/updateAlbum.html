@@ -1,0 +1,26 @@
+{% extends "user/layout.html" %}
+
+{% block rightpane %}
+<div>
+    <br>
+    <h2 style="margin-left: 50px;">Update Album - {{ album_name }}</h2>
+    <br>
+</div>
+<form action="{{ url_for('updateAlbum', album_name=album_name) }}" method="POST" enctype="multipart/form-data">
+    <div class="upload">
+        <label>Update Album title &nbsp;</label>
+        <input type="text" name="title" id="title"/>
+    </div>
+
+    <br>
+
+    <div class="upload">
+        <label>Update Cover &nbsp;</label>
+        <input type="file" name="cover" id="cover"/>
+    </div>
+
+    <br>
+    
+    <button class="upload">Submit</button>
+</form>
+{% endblock rightpane %}

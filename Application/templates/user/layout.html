@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    {% if csspage %}
+    <link rel="stylesheet" href="{{ csspage }}">    
+    {% else %}
+    <link rel="stylesheet" href="/static/style.css">
+    {% endif %}
+    <title>SongPlayer.in</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" ></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    
+</head>
+<body>
+    <header>
+        <div class="left_pane">
+            {% block leftpane %} {% endblock leftpane %}
+        </div>
+
+        <div class="right_pane text-black">
+            <nav>
+                <ul>
+                    <a href="/user/userDashboard"><li>Home</li></a>
+                    <a href="/user/Creator/existCreator"><li>Creator Mode</li></a>
+                    <a style="margin-left: 250px;"><li>{{ username }}</li></a>  
+                    <a href="/user/logout" style="margin-left: 10px;"><li>Logout</li></a>
+                </ul>
+                <form method="post" action="{{ url_for('search') }}">
+                    <div class="search">
+                        <i class="bi bi-search"></i>
+                        <input type="text" name="search" placeholder="Search Music" autocomplete=“off”/>
+                        <button type="submit"></button>
+                    </div>
+                </form>
+            </nav>
+            {% block rightpane %} {% endblock rightpane %}
+        </div> 
+        
+        {% if include_musicplayer %}
+            <div class="music_play music-player-container">
+                {% block musicplay %} {% endblock musicplay %}
+            </div>
+        {% endif %}
+        
+        
+    </header>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
