@@ -1,8 +1,9 @@
 from flask import render_template, flash, request, redirect, send_file, make_response, session, url_for
 from . import app
-from .models import User, Admin, Album, Playlist, Song
+from .models import *
 from . import db, bcrypt
 import io
+
 
 # admin = Admin(username='admin', password=bcrypt.generate_password_hash('admin@123', 10))
 # db.session.add(admin)
@@ -99,9 +100,9 @@ def delete_song_admin(song_id):
 #USER LOGIN
 @app.route('/user/', methods=['POST', 'GET'])
 def userIndex():
-    if session.get('user_id'):
-        print(session)
-        return redirect('/user/userDashboard')
+    # if session.get('user_id'):
+    #     print(session)
+    #     return redirect('/user/userDashboard')
     if request.method == 'POST':
         # GET THE NAME OF THE FIELD
         email = request.form.get('email')
@@ -126,8 +127,8 @@ def userIndex():
 #USER REGISTRATION
 @app.route('/user/signup', methods=['POST', 'GET'])
 def userSignup():
-    if session.get('user_id'):
-        return redirect('/user/userDashboard')
+    # if session.get('user_id'):
+    #     return redirect('/user/userDashboard')
     if request.method == 'POST':
         # GET ALL INPUT FIELDS NAME
         name = request.form.get('name')
@@ -168,6 +169,8 @@ def userLogout():
 @app.route('/user/userDashboard')
 def userDashboard():
     current_user = get_current_user()
+    if current_user is None:
+        return redirect('/')
     songs = Song.query.all()
     albums = Album.query.all()
     playlists = Playlist.query.filter_by(user_id=current_user.id).all()

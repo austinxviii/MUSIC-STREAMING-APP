@@ -1,4 +1,4 @@
-from . import db
+from app import db
 
 #USER CLASS
 class User(db.Model):
@@ -66,3 +66,6 @@ class Song(db.Model):
     genre = db.Column(db.String(255), nullable=False)
     lyrics = db.Column(db.LargeBinary)
     file_data = db.Column(db.LargeBinary)
+
+    def __repr__(self):
+        return f'Song("{self.id}", "{self.title}", "{self.album_id}", "{self.genre}", "{self.lyrics}")'

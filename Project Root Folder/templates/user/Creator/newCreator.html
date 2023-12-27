@@ -1,0 +1,24 @@
+{% extends "user/layout.html"%}
+
+{% block rightpane %}
+<div>
+    <h2 class="mx-5 my-4">Be a Creator, Be a Contributor.</h2>
+    <p class="mx-5 my-4" style="text-align: justify; text-justify: inter-word;">Unlock your creative potential by becoming a creator on our platform! 
+        As a creator, you gain the power to craft your musical journey—create captivating albums, 
+        upload your own audio files, and seamlessly edit your content. 
+        Immerse yourself in the art of music creation and share your unique sound with the world. 
+        Join us as a creator and shape the musical landscape with your talent and passion.
+        </p>
+        <form style="margin-left: 50px;" action="" method="POST" enctype="multipart/form-data">
+            <label>Upload your Profile Picture &nbsp;</label>
+            <input type="file" name="profile" id="profile"/>
+            <button class="btn btn-success btn-sm mx-5 my-2" onclick="registerAsCreator();">Register as Creator?</button>
+        </form>
+
+        <script>
+            function registerAsCreator() {
+                window.location.href = '/user/registerAsCreator';
+            }
+        </script>
+</div>
+{% endblock rightpane %}
